@@ -1,0 +1,257 @@
+# include <bits/stdc++.h>
+# include "akari.h"
+using namespace std;
+
+namespace aka{
+//请在命名空间内编写代码，否则后果自负
+
+vector<vector<int> > solveAkari(vector<vector<int> > & g)
+{
+    // 请在此函数内返回最后求得的结果
+
+}
+
+}
+
+
+
+
+#if !defined(LINKED_LIST_H_LIELJE7398CNHD_INCLUDE_)
+#define LINKED_LIST_H_LIELJE7398CNHD_INCLUDE_
+# include <bits/stdc++.h>
+using namespace std;
+namespace aka{
+vector<vector<int> > solveAkari(vector<vector<int> > & g);
+}
+
+#endif
+
+
+
+# include "akari.h"
+# include <bits/stdc++.h>
+using namespace std;
+#pragma warning(disable:4996)
+
+void checkAkari(vector<vector<int> > & g, vector<vector<int> > & ans);
+void displayAkari(vector<vector<int> > & ans);
+
+int main ()
+{
+    int n, m, tmp;
+    cin >> n >> m;
+    vector<vector<int> > g;
+    for (int i = 1; i <= n; ++i) {
+        g.push_back(vector<int>());
+        for (int j = 1; j <= m; ++j) {
+            cin >> tmp;
+            g[i-1].push_back(tmp);
+        }
+    }
+    vector<vector<int> > ans = aka::solveAkari(g);
+    checkAkari(g, ans);
+    return 0;
+}
+
+void checkAkari(vector<vector<int> > & g, vector<vector<int> > & ans)
+{
+    int n = (int)g.size(), m = (int)g[0].size();
+    if (n != (int)ans.size() || m != (int)ans[0].size()) {
+        cout << "The original size does not match!" << endl;
+        displayAkari(ans);
+        return ;
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (g[i][j] >= -1 && g[i][j] <= 4) {
+                if (ans[i][j] != g[i][j]) {
+                    cout << "The original picture does not match the black grid!" << endl;
+                    displayAkari(ans);
+                    return ;
+                }
+            }
+            else {
+                if (ans[i][j] >= -1 && ans[i][j] <= 4) {
+                    cout << "The original picture does not match the black grid!" << endl;
+                    displayAkari(ans);
+                    return ;
+                }
+            }
+        }
+    }
+    int ps[4][2] = {-1, 0, 1, 0, 0, -1, 0, 1};
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (ans[i][j] >= 0 && ans[i][j] <= 4) {
+                int cnt = 0;
+                for (int k = 0; k < 4; ++k) {
+                    int dx = i + ps[k][0], dy = j + ps[k][1];
+                    if (dx >= 0 && dx < n && dy >= 0 && dy < m && ans[dx][dy] == 5) ++cnt;
+                }
+                if (cnt != ans[i][j]) {
+                    cout << "The number of lights around the black grid does not match the number!" << endl;
+                    displayAkari(ans);
+                    return ;
+                }
+            }
+            else if (ans[i][j] == 5) {
+                for (int k = i + 1; k < n; ++k) {
+                    if (ans[k][j] >= -1 && ans[k][j] <= 4) break;
+                    if (ans[k][j] == 5) {
+                        cout << "Two lights shine on each other!" << endl;
+                        displayAkari(ans);
+                        return ;
+                    }
+                }
+                for (int k = j + 1; k < m; ++k) {
+                    if (ans[i][k] >= -1 && ans[i][k] <= 4) break;
+                    if (ans[i][k] == 5) {
+                        cout << "Two lights shine on each other!" << endl;
+                        displayAkari(ans);
+                        return ;
+                    }
+                }
+            }
+            else if (ans[i][j] == -2) {
+                bool flag = true;
+                for (int k = i + 1; k < n; ++k) {
+                    if (ans[k][j] >= -1 && ans[k][j] <= 4) break;
+                    if (ans[k][j] == 5) flag = false;
+                }
+                for (int k = i - 1; k >= 0; --k) {
+                    if (ans[k][j] >= -1 && ans[k][j] <= 4) break;
+                    if (ans[k][j] == 5) flag = false;
+                }
+                for (int k = j + 1; k < m; ++k) {
+                    if (ans[i][k] >= -1 && ans[i][k] <= 4) break;
+                    if (ans[i][k] == 5) flag = false;
+                }
+                for (int k = j - 1; k >= 0; --k) {
+                    if (ans[i][k] >= -1 && ans[i][k] <= 4) break;
+                    if (ans[i][k] == 5) flag = false;
+                }
+                if (flag == true) {
+                    cout << "There's a place where all the lights don't shine!" << endl;
+                    displayAkari(ans);
+                    return ;
+                }
+            }
+        }
+    }
+    cout << "The answer is right!";
+}
+
+void displayAkari(vector<vector<int> > & ans)
+{
+    printf("your magic matrix is following: \n");
+    int n = ans.size(), m = ans[0].size();
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            printf("%4d", ans[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
+任务描述
+本关任务：
+
+了解Akari问题，探索其解决方法。
+了解回溯法的概念，掌握回溯法的原理，并能够使用一种编程语言通过使用回溯法解决问题。
+培养和锻炼分析问题与解决问题的能力。
+相关知识
+Akari 问题
+Akari问题有时又被称为Light up或者Beleuchtung，源于日本逻辑解密游戏系列Nikoli，同属于Nikoli谜题的除Akari之外还有Sudoku(数独)和Kakuro(数谜)等。
+
+游戏规则很简单。点灯游戏的棋盘是一张方形格网，其中的格子可能是黑色也可能是白色。游戏目标是在格网中放置灯泡，使之能照亮所有的白色方格。如果一个方格所在的同一行或同一列有一个灯泡，并且方格和灯泡之间没有黑色格子阻挡，那么这个方格将被灯泡照亮。同时，放置的每个灯泡不能被另一个灯泡照亮。
+某些黑色格子中标有数字。这些数字表示在该格子四周相邻的格子中共有多少个灯泡。
+
+Akari问题的示意如图1所示。
+
+
+
+图1 Akari的初始状态与解
+回溯法
+回溯法是一种迭代算法。在回溯法中，首先将问题的解决分为若干步，其次通过枚举每一步的选择构造解空间树。在此基础上通过深度优先搜索遍历此解空间树，若当前节点的局部解不能构造出全局解，则向上回溯，否则向下扩展。重复此步骤直到找到全局解。
+
+回溯法的关键点在于：
+
+问题可分步并且可枚举每一步的选择。
+可以迅速的判断出当前局部解可否构造出全局解。
+若问题可分为N步，每一步有M种选择，易知其时间复杂度为O(m^n)O(m
+​n
+​​ )，虽然和穷举法有着相同的时间复杂度，但因为是逐步搜索并不断摒弃局部解，因此在实际应用中比穷举法效率高的多。
+
+回溯法的递归形式的伪代码如下:
+
+function BT(c)
+{
+  if ( DeadEnd(c) ) return;
+  if ( Solution(c) ) Output(c);
+  else
+    foreach (s = next moves from c)
+}
+编程要求
+编程实现使用回溯法解决Akari问题。要求首先对问题进行划分，并根据每一步构造解空间，进而设计合理的数据结构与程序结构对问题进行求解，并在此基础上对算法以及程序逻辑进行优化和改进，最后进行问题的分析、讨论和展望。关键步骤如下。
+
+对问题进行划分
+根据黑色方格中数字的大小，按从大到小的顺序进行排序，并将“在一个有数字的黑色方格周围放置‘车’”定义为一步。
+选择枚举
+枚举每一步的选择。
+若黑色方格中的数字为4，则其相邻的周围格子的“灯泡”的放置方式为1种，即上下左右均放置一个“灯泡”。
+若黑色方格中的数字为3，则其相邻的周围格子的“灯泡”的放置方式为4种，即在左右下、下右上、右上左、上左下的格子中放置“灯泡”。
+若黑色方格中的数字为2，则其相邻的周围格子的“灯泡”的放置方式有6种，即在上左、上下、上右、左下、左右、下右的格子中放置“灯泡”。
+若黑色方格中的数字为1，则其相邻的周围格子的“灯泡”的放置方式有4种，即在上、下、左、右的格子中放置“灯泡”。
+若黑色方格中的数字为0，则其相邻的周围格子的“灯泡”的放置方式有1种，即所有周围格子均不放置车。
+构造解空间
+根据上述讨论构造解空间，初始状态为解空间树的根节点，从编号最大的黑色格子开始尝试填入“灯泡”，填入后判断是否为一个可行解，若为可行解，则解空间向下进行分枝，否则向上进行回溯。解空间树的结构大致如图2所示。
+程序设计与实现
+根据回溯法的伪代码和上述算法的设计思路，建立合适的数据模型与程序结构，编写程序求解问题，同时记录程序的运行时间。
+讨论与改进
+分析算法的时间负责度与空间复杂度，根据某一用例和计算机的计算能力，估计程序运行时间，并将该时间与实际运行时间进行比较。
+同时讨论与优化程序结构和数据结构，以求达到更快的程序执行速度和更少的内存占用量。
+一种可能的解空间如图2所示。
+
+
+
+图2 解空间树的结构
+格式说明
+输入数据由若干文件组成，每个文件描述一个Akari问题的初始状态，编写程序读入此文件，根据初始状态求解。有的有一个解，有的有多个解，我们保证有解。
+
+文件由若干行组成，第一行为两个整数 n，m，代表棋盘的行数和列数。之后的 n 行每行有 m 个整数表示棋盘的每个格子的状态，若它为 -2，则表示是白格子，若它为 -1，则表示是没有数字的黑格子，若它为 0-4，则表示是数字 0-4 的黑格子。若你想把灯泡放在白色格子上面，则需要将 -2 改为 5，因为 5 表示有灯泡的格子。
+
+你需要在右侧代码编辑框给出的函数中编写你的代码，函数的参数为我们给出的light up矩阵，你需要在该函数中返回相同大小的结果矩阵。对于有多个解的light up，你可以返回其中的任意一组解，我们将对你返回的矩阵进行检查，若结果正确，提示The answer is right!，否则提示其它。
+
+输出举例
+
+
+图3 一个初始的7*7light up 谜题
+对于图3这个谜题来说，我们接受的参数矩阵为:
+
+-2 -2 -1 1 -2 -2 -2
+-2 -2 -2 -2 -2 -2 -2
+-2 -2 -2 -2 -2 -2 1
+0 -2 -2	-2 -2 -2 1
+2 -2 -2	-2 -2 -2 -2
+-2 -2 -2 -2 -2 -2 -2
+-2 -2 -2 1 -1 -2 -2
+图3 的一个可行解为图4.
+
+
+
+图3 一个已解决的7*7light up 谜题
+那么我们应该返回的结果矩阵为:
+
+5	-2	-1	1	5	-2	-2
+-2	-2	-2	-2	-2	-2	5
+-2	-2	-2	5	-2	-2	1
+0	-2	-2	-2	-2	5	1
+2	5	-2	-2	-2	-2	-2
+5	-2	-2	-2	-2	-2	-2
+-2	-2	5	1	-1	-2	5
+开始你的任务吧，祝你成功！
+
+
+
+
